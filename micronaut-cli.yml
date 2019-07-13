@@ -1,0 +1,5 @@
+profile: ph.net.see.cli
+defaultPackage: java.mysql.test.franz
+---
+testFramework: junit
+sourceLanguage: java
