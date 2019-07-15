@@ -4,6 +4,8 @@ micronaut:
 
 application:
   version: parser ${pom.version}
+  parser:
+    size: ${parser.size:1000}
 
 datasources:
   cli:
@@ -12,7 +14,7 @@ datasources:
     password: ${jdbc.password}
     driverClassName: ${jdbc.driver:com.mysql.jdbc.Driver}
 
-#flyway:
-#  datasources:
-#    cli:
-#      locations: classpath:databasemigrations
+flyway:
+  datasources:
+    cli:
+      locations: classpath:databasemigrations

@@ -58,8 +58,9 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.2.3</version>
     </dependency>
     <dependency>
       <groupId>io.micronaut.configuration</groupId>
@@ -90,16 +91,19 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
+      <version>5.5.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.5.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
+      <version>5.5.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -136,6 +140,14 @@
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
+      </resource>
+      <resource>
+        <directory>.</directory>
+        <includes>
+          <include>.env</include>
+        </includes>
+        <filtering>false</filtering>
+        <targetPath>${project.build.directory}</targetPath>
       </resource>
     </resources>
 

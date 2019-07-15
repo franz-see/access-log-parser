@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Builder
 public class AccessLogEntry {
 
-    private Long id;
     private LocalDateTime timestamp;
     private String ipaddress;
     private String httpCall;

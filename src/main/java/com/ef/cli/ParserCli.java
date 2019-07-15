@@ -3,7 +3,6 @@ package com.ef.cli;
 import com.ef.dto.Duration;
 import com.ef.dto.ParseReport;
 import com.ef.service.ParserService;
-import com.ef.service.ParserServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
@@ -24,15 +23,17 @@ public class ParserCli implements Runnable {
 
     private ParserService parserService;
 
+    @SuppressWarnings("unused")
     @Inject
-    void setParserService(ParserService parserService) {
+    public void setParserService(ParserService parserService) {
         this.parserService = parserService;
     }
 
     @CommandLine.Option(
             names = { "--accesslog" },
-            required = true,
-            description = "The access log that would be parsed for IP search.")
+            description = "The access log that would be parsed for IP search. If this is provided, this is will clear" +
+                    "the database and reinsert the contents of the accesslog. If this is not provided, then this will" +
+                    "query the existing database with the rest of the parameters provided.")
     private File accesslog;
 
     @CommandLine.Option(
@@ -59,16 +60,23 @@ public class ParserCli implements Runnable {
 
     @Override
     public void run() {
-        try (Reader accesslogReader = new FileReader(accesslog)) {
-            ParseReport parseReport = parserService.parse(accesslogReader, startDate, duration, threshold);
-        } catch (FileNotFoundException e) {
-            LOGGER.error("Unable to find {}.", accesslog.getAbsolutePath());
-            System.exit(1);
-        } catch (IOException e) {
-            LOGGER.error("Unable to read {}.", accesslog.getAbsolutePath(), e);
-            System.exit(1);
+        ParseReport parseReport;
+        try {
+            if (accesslog == null) {
+                parseReport = parserService.parse(null, startDate, duration, threshold);
+            } else {
+                try (Reader accesslogReader = new FileReader(accesslog)) {
+                    parseReport = parserService.parse(accesslogReader, startDate, duration, threshold);
+                } catch (FileNotFoundException e) {
+                    LOGGER.error("Unable to find {}.", accesslog.getAbsolutePath());
+                    System.exit(1);
+                } catch (IOException e) {
+                    LOGGER.error("Unable to read {}.", accesslog.getAbsolutePath(), e);
+                    System.exit(1);
+                }
+            }
         } catch (Exception e) {
-            LOGGER.error("Unable to parse {}.", accesslog.getAbsolutePath(), e);
+            LOGGER.error("Unable to parse process request.", e);
             System.exit(1);
         }
     }

@@ -2,7 +2,11 @@ package com.ef.repository;
 
 import com.ef.domain.AccessLogEntry;
 
+import java.util.Collection;
+
 public interface AccessLogEntryRepository {
 
-    AccessLogEntry save(AccessLogEntry accessLogEntry);
+    void deleteAll();
+
+    void save(Collection<AccessLogEntry> accessLogEntries);
 }
