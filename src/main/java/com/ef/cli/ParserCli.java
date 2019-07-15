@@ -1,7 +1,7 @@
 package com.ef.cli;
 
+import com.ef.domain.PeriodSummary;
 import com.ef.dto.Duration;
-import com.ef.dto.ParseReport;
 import com.ef.service.ParserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +10,11 @@ import picocli.CommandLine;
 import javax.inject.Inject;
 import java.io.*;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 /**
  * Some dummy production code
@@ -60,7 +65,7 @@ public class ParserCli implements Runnable {
 
     @Override
     public void run() {
-        ParseReport parseReport;
+        List<PeriodSummary> parseReport = Collections.emptyList();
         try {
             if (accesslog == null) {
                 parseReport = parserService.parse(null, startDate, duration, threshold);
@@ -74,6 +79,16 @@ public class ParserCli implements Runnable {
                     LOGGER.error("Unable to read {}.", accesslog.getAbsolutePath(), e);
                     System.exit(1);
                 }
+            }
+            String header = format("Parse Report (startDate=%s, duration=%s, threshold=%d)",
+                    startDate, duration, threshold);
+            if (parseReport.isEmpty()) {
+                LOGGER.info("{}:\n <no ip addresses found>", header);
+            } else {
+                String reportMessage = "{}:\n * " + parseReport.stream()
+                        .map(PeriodSummary::getComment)
+                        .collect(Collectors.joining("\n * "));
+                LOGGER.info(reportMessage, header);
             }
         } catch (Exception e) {
             LOGGER.error("Unable to parse process request.", e);

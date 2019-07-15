@@ -1,6 +1,6 @@
 create table access_log_entry (
   id int not null primary key auto_increment,
-  timestamp datetime not null,
+  timestamp datetime(6) not null,
   ip_address varchar(255) not null,
   http_call varchar(255) not null,
   http_status_code int not null,

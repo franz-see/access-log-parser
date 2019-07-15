@@ -20,7 +20,7 @@ class ParserTest {
     @Order(1)
     void oneLineTest() throws Exception {
         File file = getFileFromClasspath("access-logs/basic.log");
-        Parser.main(new String[] {
+        Parser.run(new String[] {
                 format("--accesslog=%s", file.getAbsolutePath()),
                 "--startDate=2017-01-01.13:00:00",
                 "--duration=hourly",
@@ -32,7 +32,7 @@ class ParserTest {
     @Order(2)
     void oneThousandLineTest() throws Exception {
         File file = getFileFromClasspath("access-logs/1000-lines.log");
-        Parser.main(new String[] {
+        Parser.run(new String[] {
                 format("--accesslog=%s", file.getAbsolutePath()),
                 "--startDate=2017-01-01.13:00:00",
                 "--duration=hourly",
@@ -43,10 +43,32 @@ class ParserTest {
     @Test
     @Order(3)
     void noAccesslogParameter() throws Exception {
-        Parser.main(new String[] {
+        Parser.run(new String[] {
                 "--startDate=2017-01-01.13:00:00",
                 "--duration=hourly",
                 "--threshold=100"
+        });
+    }
+
+    @Test
+    @Order(4)
+    void sanityTestOfHourly() throws Exception {
+        File file = getFileFromClasspath("access-logs/full.log");
+        Parser.run(new String[] {
+                format("--accesslog=%s", file.getAbsolutePath()),
+                "--startDate=2017-01-01.13:00:00",
+                "--duration=hourly",
+                "--threshold=100"
+        });
+    }
+
+    @Test
+    @Order(5)
+    void sanityTestOfDaily() throws Exception {
+        Parser.run(new String[] {
+                "--startDate=2017-01-01.00:00:00",
+                "--duration=daily",
+                "--threshold=500"
         });
     }
 

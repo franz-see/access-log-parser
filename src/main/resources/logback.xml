@@ -6,7 +6,11 @@
         </encoder>
     </appender>
 
-    <root level="info">
+    <logger name="com.ef" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <root level="warn">
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

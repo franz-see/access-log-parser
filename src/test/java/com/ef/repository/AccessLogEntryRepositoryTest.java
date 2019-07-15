@@ -1,6 +1,7 @@
 package com.ef.repository;
 
 import com.ef.domain.AccessLogEntry;
+import com.ef.domain.PeriodSummary;
 import com.ef.test.TestEnvironment;
 import com.ef.util.ContextUtil;
 import io.micronaut.context.ApplicationContext;
@@ -8,13 +9,12 @@ import org.junit.jupiter.api.*;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.ef.test.RepositoryUtil.assertDbEntryCount;
+import static com.ef.test.RepositoryUtil.deleteAll;
 import static com.ef.test.TestEnvironment.assumeMySqlIsUp;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,11 +33,7 @@ class AccessLogEntryRepositoryTest {
         accessLogEntryRepository = ctx.getBean(AccessLogEntryRepository.class);
         dataSource = ctx.getBean(DataSource.class);
 
-        try (Connection connection = dataSource.getConnection()) {
-            try (Statement statement = connection.createStatement()) {
-                statement.executeUpdate("delete from access_log_entry");
-            }
-        }
+        deleteAll(dataSource, "access_log_entry");
     }
 
     @Test
@@ -62,8 +58,27 @@ class AccessLogEntryRepositoryTest {
 
         accessLogEntryRepository.save(accessLogEntries);
 
-        int expectedCount = 2;
-        assertDbEntryCount(expectedCount, "access_log_entry");
+        assertDbEntryCount(dataSource, "access_log_entry", 2);
+    }
+
+    @Test
+    @Order(2)
+    void shouldBeAbleToQuery() {
+        LocalDateTime startDate = LocalDateTime.of(2017, 1, 1, 23, 59, 59);
+
+        List<PeriodSummary> periodSummary = accessLogEntryRepository.findHourlyCount(startDate, 1);
+
+        assertThat(periodSummary)
+                .as("periodSummary")
+                .isNotNull()
+                .hasSize(1)
+                .containsExactly(PeriodSummary.builder()
+                        .startPeriod(startDate)
+                        .endPeriod(startDate.plusHours(1))
+                        .ipaddress("192.168.122.135")
+                        .count(1L)
+                        .comment("192.168.122.135 did 1 call(s) from 2017-01-01 23:59:59 to 2017-01-02 00:59:59")
+                        .build());
     }
 
     @Test
@@ -71,18 +86,7 @@ class AccessLogEntryRepositoryTest {
     void shouldBeAbleToDeleteAll() throws SQLException {
         accessLogEntryRepository.deleteAll();
 
-        assertDbEntryCount(0, "access_log_entry");
+        assertDbEntryCount(dataSource, "access_log_entry", 0);
     }
 
-    private void assertDbEntryCount(int expectedCount, String tableName) throws SQLException {
-        String sqlQuery = "select count(*) as cnt from " + tableName;
-        try (Connection connection = dataSource.getConnection()) {
-            try (Statement statement = connection.createStatement()) {
-                ResultSet resultSet = statement.executeQuery(sqlQuery);
-                assertThat(resultSet.next()).as("has ResultSet").isTrue();
-                int numberOfEntries = resultSet.getInt("cnt");
-                assertThat(numberOfEntries).as(sqlQuery).isEqualTo(expectedCount);
-            }
-        }
-    }
 }

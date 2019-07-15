@@ -1,9 +1,10 @@
 package com.ef.service;
 
 import com.ef.domain.AccessLogEntry;
+import com.ef.domain.PeriodSummary;
 import com.ef.dto.Duration;
-import com.ef.dto.ParseReport;
 import com.ef.repository.AccessLogEntryRepository;
+import com.ef.repository.PeriodSummaryRepository;
 import com.ef.util.LineParser;
 import io.micronaut.context.annotation.Value;
 import org.slf4j.Logger;
@@ -26,44 +27,65 @@ public class ParserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParserService.class);
 
-    @Value("${application.parser.size:1000}")
+    @Value("${application.parser.size:10000}")
     private int parserSize;
 
     @Inject
     private AccessLogEntryRepository accessLogEntryRepository;
 
-    public ParseReport parse(Reader accesslog, LocalDateTime startDate, Duration duration, int threshold) {
-        LOGGER.info("Parsing {} from startDate {}, with duration {}, and threshold {} (parse size = {}).",
-                accesslog, startDate, duration, threshold, parserSize);
+    @Inject
+    private PeriodSummaryRepository periodSummaryRepository;
+
+    public List<PeriodSummary> parse(Reader accesslog, LocalDateTime startDate, Duration duration, int threshold) {
+        LOGGER.info("Parsing from startDate {}, with duration {}, and threshold {} (parse size = {}).",
+                startDate, duration, threshold, parserSize);
         try {
             if (accesslog != null) {
-                LOGGER.info("Deleting all entries in AccessLogEntry table.");
-                accessLogEntryRepository.deleteAll();
-
-                LOGGER.info("Reading accesslog file and entering into the database.");
-                BufferedReader bufferedReader = new BufferedReader(accesslog);
-                int lineNumber = 0;
-                String line = bufferedReader.readLine();
-                List<String> bufferedLines = new LinkedList<>();
-                while (line != null) {
-                    bufferedLines.add(line);
-                    if (bufferedLines.size() >= parserSize) {
-                        lineNumber = process(lineNumber, bufferedLines);
-                        bufferedLines.clear();
-                    }
-                    line = bufferedReader.readLine();
-                }
-                if (!bufferedLines.isEmpty()) {
-                    process(lineNumber, bufferedLines);
-                    bufferedLines.clear();
-                }
+                repopulateAccesslog(accesslog);
             }
-
-            return null;
+            return queryPeriodSummaries(startDate, duration, threshold);
         } catch (IOException e) {
             throw new ParserServiceException("Unable to read accesslog", e);
         } catch (Exception e) {
             throw new ParserServiceException("Unable to process accesslog", e);
+        }
+    }
+
+    private void repopulateAccesslog(Reader accesslog) throws IOException {
+        LOGGER.info("Deleting all entries in AccessLogEntry table.");
+        accessLogEntryRepository.deleteAll();
+
+        LOGGER.info("Reading accesslog file and entering into the database.");
+        BufferedReader bufferedReader = new BufferedReader(accesslog);
+        int lineNumber = 0;
+        String line = bufferedReader.readLine();
+        List<String> bufferedLines = new LinkedList<>();
+        while (line != null) {
+            bufferedLines.add(line);
+            if (bufferedLines.size() >= parserSize) {
+                lineNumber = process(lineNumber, bufferedLines);
+                bufferedLines.clear();
+            }
+            line = bufferedReader.readLine();
+        }
+        if (!bufferedLines.isEmpty()) {
+            process(lineNumber, bufferedLines);
+            bufferedLines.clear();
+        }
+    }
+
+    private List<PeriodSummary> queryPeriodSummaries(LocalDateTime startDate, Duration duration, int threshold) {
+        // period summary is pretty fast to compute so we will just delete it everytime we recompute it
+        // otherwise, this table will get bigger and bigger until a new accesslog file is passed on
+        periodSummaryRepository.deleteAll();
+        if (Duration.Hourly.equals(duration)) {
+            List<PeriodSummary> periodSummaries = accessLogEntryRepository.findHourlyCount(startDate, threshold);
+            periodSummaryRepository.save(periodSummaries);
+            return periodSummaries;
+        } else {
+            List<PeriodSummary> periodSummaries = accessLogEntryRepository.findDailyCount(startDate, threshold);
+            periodSummaryRepository.save(periodSummaries);
+            return periodSummaries;
         }
     }
 
