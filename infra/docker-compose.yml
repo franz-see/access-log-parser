@@ -1,0 +1,22 @@
+version: '3'
+services:
+  db:
+    container_name: db
+    image: mysql:5.7.26
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: parser
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - /tmp:/tmp
+  test_db:
+    container_name: test_db
+    image: mysql:5.7.26
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: parser_test
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - /tmp:/tmp

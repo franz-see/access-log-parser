@@ -1,0 +1,11 @@
+datasources:
+  withdb:
+    url: jdbc:mysql://127.0.0.1:3307/parser_test?allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: root
+    driverClassName: com.mysql.jdbc.Driver
+
+flyway:
+  datasources:
+    withdb:
+      locations: classpath:databasemigrations

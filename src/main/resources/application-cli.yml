@@ -1,0 +1,18 @@
+micronaut:
+  application:
+    name: java-mysql-test-franz
+
+application:
+  version: parser ${pom.version}
+
+datasources:
+  cli:
+    url: ${jdbc.url}
+    username: ${jdbc.username}
+    password: ${jdbc.password}
+    driverClassName: ${jdbc.driver:com.mysql.jdbc.Driver}
+
+#flyway:
+#  datasources:
+#    cli:
+#      locations: classpath:databasemigrations

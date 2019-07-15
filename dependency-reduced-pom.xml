@@ -227,7 +227,7 @@
   </dependencyManagement>
   <properties>
     <micronaut.version>1.1.4</micronaut.version>
-    <exec.mainClass>ph.net.see.Main</exec.mainClass>
+    <exec.mainClass>com.ef.Parser</exec.mainClass>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jdk.version>11</jdk.version>
   </properties>

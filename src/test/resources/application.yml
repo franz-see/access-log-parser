@@ -1,6 +1,0 @@
-micronaut:
-  application:
-    name: java-mysql-test-franz
-
-application:
-  version: parser test version

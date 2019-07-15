@@ -1,4 +1,4 @@
-profile: ph.net.see.cli
+profile: com.ef.cli
 defaultPackage: java.mysql.test.franz
 ---
 testFramework: junit
