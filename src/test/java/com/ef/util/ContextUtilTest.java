@@ -23,23 +23,23 @@ class ContextUtilTest {
                 .isNotNull();
 
         String dotenvPath = new File(resource.getFile()).getAbsolutePath();
-        ApplicationContext ctx = ContextUtil.getCtx(dotenvPath, TestEnvironment.NO_DB);
-
-        assertThat(ctx).as("ctx")
-                .isNotNull()
-                .satisfies(_ctx -> {
-                    try (AutoCloseableSoftAssertions softly = new AutoCloseableSoftAssertions()) {
-                        softly.assertThat(_ctx.getProperty("jdbc.url", String.class).orElse(null))
-                                .as("jdbc.url")
-                                .isEqualTo("jdbc:mysql://127.0.0.1:3307/parser_test?allowPublicKeyRetrieval=true&useSSL=false");
-                        softly.assertThat(_ctx.getProperty("jdbc.username", String.class).orElse(null))
-                                .as("jdbc.username")
-                                .isEqualTo("root");
-                        softly.assertThat(_ctx.getProperty("jdbc.password", String.class).orElse(null))
-                                .as("jdbc.password")
-                                .isEqualTo("root");
-                    }
-                });
+        try (ApplicationContext ctx = ContextUtil.getCtx(dotenvPath, TestEnvironment.NO_DB)) {
+            assertThat(ctx).as("ctx")
+                    .isNotNull()
+                    .satisfies(_ctx -> {
+                        try (AutoCloseableSoftAssertions softly = new AutoCloseableSoftAssertions()) {
+                            softly.assertThat(_ctx.getProperty("jdbc.url", String.class).orElse(null))
+                                    .as("jdbc.url")
+                                    .isEqualTo("jdbc:mysql://127.0.0.1:3307/parser_test?allowPublicKeyRetrieval=true&useSSL=false");
+                            softly.assertThat(_ctx.getProperty("jdbc.username", String.class).orElse(null))
+                                    .as("jdbc.username")
+                                    .isEqualTo("root");
+                            softly.assertThat(_ctx.getProperty("jdbc.password", String.class).orElse(null))
+                                    .as("jdbc.password")
+                                    .isEqualTo("root");
+                        }
+                    });
+        }
     }
 
     @Test
@@ -50,43 +50,43 @@ class ContextUtilTest {
                 .isFalse();
 
         String dotenvPath = dotenvFile.getAbsolutePath();
-        ApplicationContext ctx = ContextUtil.getCtx(dotenvPath, TestEnvironment.NO_DB);
-
-        assertThat(ctx).as("ctx")
-                .isNotNull()
-                .satisfies(_ctx -> {
-                    try (AutoCloseableSoftAssertions softly = new AutoCloseableSoftAssertions()) {
-                        softly.assertThat(_ctx.getProperty("jdbc.url", String.class).orElse(null))
-                                .as("jdbc.url")
-                                .isNull();
-                        softly.assertThat(_ctx.getProperty("jdbc.username", String.class).orElse(null))
-                                .as("jdbc.username")
-                                .isNull();
-                        softly.assertThat(_ctx.getProperty("jdbc.password", String.class).orElse(null))
-                                .as("jdbc.password")
-                                .isNull();
-                    }
-                });
+        try (ApplicationContext ctx = ContextUtil.getCtx(dotenvPath, TestEnvironment.NO_DB)) {
+            assertThat(ctx).as("ctx")
+                    .isNotNull()
+                    .satisfies(_ctx -> {
+                        try (AutoCloseableSoftAssertions softly = new AutoCloseableSoftAssertions()) {
+                            softly.assertThat(_ctx.getProperty("jdbc.url", String.class).orElse(null))
+                                    .as("jdbc.url")
+                                    .isNull();
+                            softly.assertThat(_ctx.getProperty("jdbc.username", String.class).orElse(null))
+                                    .as("jdbc.username")
+                                    .isNull();
+                            softly.assertThat(_ctx.getProperty("jdbc.password", String.class).orElse(null))
+                                    .as("jdbc.password")
+                                    .isNull();
+                        }
+                    });
+        }
     }
 
     @Test
     void givenNullDotenvPath() throws IOException {
-        ApplicationContext ctx = ContextUtil.getCtx(null, TestEnvironment.NO_DB);
-
-        assertThat(ctx).as("ctx")
-                .isNotNull()
-                .satisfies(_ctx -> {
-                    try (AutoCloseableSoftAssertions softly = new AutoCloseableSoftAssertions()) {
-                        softly.assertThat(_ctx.getProperty("jdbc.url", String.class).orElse(null))
-                                .as("jdbc.url")
-                                .isNull();
-                        softly.assertThat(_ctx.getProperty("jdbc.username", String.class).orElse(null))
-                                .as("jdbc.username")
-                                .isNull();
-                        softly.assertThat(_ctx.getProperty("jdbc.password", String.class).orElse(null))
-                                .as("jdbc.password")
-                                .isNull();
-                    }
-                });
+        try (ApplicationContext ctx = ContextUtil.getCtx(null, TestEnvironment.NO_DB)) {
+            assertThat(ctx).as("ctx")
+                    .isNotNull()
+                    .satisfies(_ctx -> {
+                        try (AutoCloseableSoftAssertions softly = new AutoCloseableSoftAssertions()) {
+                            softly.assertThat(_ctx.getProperty("jdbc.url", String.class).orElse(null))
+                                    .as("jdbc.url")
+                                    .isNull();
+                            softly.assertThat(_ctx.getProperty("jdbc.username", String.class).orElse(null))
+                                    .as("jdbc.username")
+                                    .isNull();
+                            softly.assertThat(_ctx.getProperty("jdbc.password", String.class).orElse(null))
+                                    .as("jdbc.password")
+                                    .isNull();
+                        }
+                    });
+        }
     }
 }

@@ -1,11 +1,11 @@
 package com.ef.repository.mapper;
 
 import com.ef.domain.PeriodSummary;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 public interface PeriodSummaryMapper {
 
@@ -23,4 +23,14 @@ public interface PeriodSummaryMapper {
             "</foreach>",
             "</script>"})
     void save(@Param("periodSummaries") Collection<PeriodSummary> periodSummaries);
+
+    @Results(id = "periodSummaries", value = {
+            @Result(property = "ipaddress", column = "ip_address", javaType = String.class),
+            @Result(property = "startPeriod", column = "start_period", javaType = LocalDateTime.class),
+            @Result(property = "endPeriod", column = "end_period", javaType = LocalDateTime.class),
+            @Result(property = "count", column = "cnt", javaType = Long.class),
+            @Result(property = "comment", column = "comment", javaType = String.class)
+    })
+    @Select("select * from period_summary")
+    List<PeriodSummary> findAll();
 }

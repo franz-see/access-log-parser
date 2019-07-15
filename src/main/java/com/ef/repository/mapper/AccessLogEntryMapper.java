@@ -36,7 +36,7 @@ public interface AccessLogEntryMapper {
             "     , tmp.period as start_period\n" +
             "     , DATE_ADD(tmp.period, interval 1 hour) as end_period\n" +
             "     , tmp.cnt\n" +
-            "     , concat(tmp.ip_address, \" did \", tmp.cnt, \" call(s) from \", tmp.period, \" to \", DATE_ADD(tmp.period, interval 1 hour)) as comment\n" +
+            "     , concat(LPAD(tmp.ip_address, 15, ' '), \" did \", tmp.cnt, \" call(s) from \", tmp.period, \" to \", DATE_ADD(tmp.period, interval 1 hour)) as comment\n" +
             "  from (\n" +
             "        select ip_address\n" +
             "             , DATE_FORMAT(timestamp, concat(\"%Y-%m-%d %H:\", LPAD(#{startDateTime.minute}, 2, '0'), \":\", LPAD(#{startDateTime.second}, 2, '0'))) as period\n" +
@@ -56,7 +56,7 @@ public interface AccessLogEntryMapper {
             "     , tmp.period as start_period\n" +
             "     , DATE_ADD(tmp.period, interval 1 day) as end_period\n" +
             "     , tmp.cnt\n" +
-            "     , concat(tmp.ip_address, \" did \", tmp.cnt, \" call(s) from \", tmp.period, \" to \", DATE_ADD(tmp.period, interval 1 hour)) as comment\n" +
+            "     , concat(LPAD(tmp.ip_address, 15, ' '), \" did \", tmp.cnt, \" call(s) from \", tmp.period, \" to \", DATE_ADD(tmp.period, interval 1 day)) as comment\n" +
             "  from (\n" +
             "        select ip_address\n" +
             "             , DATE_FORMAT(timestamp, concat(\"%Y-%m-%d \", LPAD(#{startDateTime.hour}, 2, '0'), \":\", LPAD(#{startDateTime.minute}, 2, '0'), \":\", LPAD(#{startDateTime.second}, 2, '0'))) as period\n" +

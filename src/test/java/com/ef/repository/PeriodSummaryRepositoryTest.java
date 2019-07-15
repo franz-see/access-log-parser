@@ -1,6 +1,5 @@
 package com.ef.repository;
 
-import com.ef.domain.AccessLogEntry;
 import com.ef.domain.PeriodSummary;
 import com.ef.test.TestEnvironment;
 import com.ef.util.ContextUtil;
@@ -9,17 +8,13 @@ import org.junit.jupiter.api.*;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 import static com.ef.test.RepositoryUtil.assertDbEntryCount;
 import static com.ef.test.RepositoryUtil.deleteAll;
 import static com.ef.test.TestEnvironment.assumeMySqlIsUp;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -27,16 +22,22 @@ class PeriodSummaryRepositoryTest {
 
     private static PeriodSummaryRepository periodSummaryRepository;
     private static DataSource dataSource;
+    private static ApplicationContext ctx;
 
     @BeforeAll
     static void setup() throws IOException, SQLException {
         assumeMySqlIsUp();
 
-        ApplicationContext ctx = ContextUtil.getCtx(null, TestEnvironment.WITH_DB);
+        ctx = ContextUtil.getCtx(null, TestEnvironment.WITH_DB);
         periodSummaryRepository = ctx.getBean(PeriodSummaryRepository.class);
         dataSource = ctx.getBean(DataSource.class);
 
         deleteAll(dataSource, "period_summary");
+    }
+
+    @AfterAll
+    static void cleanup() {
+        ctx.stop();
     }
 
     @Test

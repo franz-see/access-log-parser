@@ -24,16 +24,22 @@ class AccessLogEntryRepositoryTest {
 
     private static AccessLogEntryRepository accessLogEntryRepository;
     private static DataSource dataSource;
+    private static ApplicationContext ctx;
 
     @BeforeAll
     static void setup() throws IOException, SQLException {
         assumeMySqlIsUp();
 
-        ApplicationContext ctx = ContextUtil.getCtx(null, TestEnvironment.WITH_DB);
+        ctx = ContextUtil.getCtx(null, TestEnvironment.WITH_DB);
         accessLogEntryRepository = ctx.getBean(AccessLogEntryRepository.class);
         dataSource = ctx.getBean(DataSource.class);
 
         deleteAll(dataSource, "access_log_entry");
+    }
+
+    @AfterAll
+    static void cleanup() {
+        ctx.stop();
     }
 
     @Test

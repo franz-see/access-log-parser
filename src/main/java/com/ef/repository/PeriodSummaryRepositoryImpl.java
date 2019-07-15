@@ -5,6 +5,7 @@ import com.ef.repository.mapper.PeriodSummaryMapper;
 
 import javax.inject.Singleton;
 import java.util.Collection;
+import java.util.List;
 
 @Singleton
 public class PeriodSummaryRepositoryImpl implements PeriodSummaryRepository {
@@ -25,5 +26,9 @@ public class PeriodSummaryRepositoryImpl implements PeriodSummaryRepository {
     public void save(Collection<PeriodSummary> periodSummaries) {
         periodSummaryMapper.save(periodSummaries);
     }
-    
+
+    @Override
+    public List<PeriodSummary> findAll() {
+        return periodSummaryMapper.findAll();
+    }
 }

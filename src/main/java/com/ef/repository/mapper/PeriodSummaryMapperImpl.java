@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.inject.Singleton;
 import java.util.Collection;
+import java.util.List;
 
 @Singleton
 public class PeriodSummaryMapperImpl implements PeriodSummaryMapper {
@@ -37,6 +38,13 @@ public class PeriodSummaryMapperImpl implements PeriodSummaryMapper {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             getPeriodSummaryMapper(sqlSession).save(periodSummaries);
             sqlSession.commit();
+        }
+    }
+
+    @Override
+    public List<PeriodSummary> findAll() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            return getPeriodSummaryMapper(sqlSession).findAll();
         }
     }
 }
