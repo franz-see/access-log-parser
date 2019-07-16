@@ -145,6 +145,7 @@
         <directory>.</directory>
         <includes>
           <include>.env</include>
+          <include>.env-sample</include>
         </includes>
         <filtering>false</filtering>
         <targetPath>${project.build.directory}</targetPath>
