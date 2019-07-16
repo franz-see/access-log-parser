@@ -21,6 +21,28 @@
     </repository>
   </repositories>
 
+  <scm>
+    <connection>scm:git:https://github.com/franz-see/access-log-parser.git</connection>
+    <developerConnection>scm:git:git@github.com:franz-see/access-log-parser.git</developerConnection>
+    <url>https://github.com/franz-see/access-log-parser</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>synergian-repo</id>
+      <url>https://raw.github.com/synergian/wagon-git/releases</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <distributionManagement>
+    <repository>
+      <id>bintray-franz-see-maven-repo</id>
+      <name>franz-see-maven-repo</name>
+      <url>https://api.bintray.com/maven/franz-see/maven-repo/access-log-parser/;publish=1</url>
+    </repository>
+  </distributionManagement>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -136,6 +158,13 @@
   </dependencies>
 
   <build>
+    <extensions>
+      <extension>
+        <groupId>ar.com.synergian</groupId>
+        <artifactId>wagon-git</artifactId>
+        <version>0.3.0</version>
+      </extension>
+    </extensions>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -305,6 +334,36 @@
                 <goals>
                   <goal>display-dependency-updates</goal>
                 </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>release</id>
+      <properties>
+        <prerelease>false</prerelease>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>de.jutzig</groupId>
+            <artifactId>github-release-plugin</artifactId>
+            <version>1.3.0</version>
+            <executions>
+              <execution>
+                <id>github-upload</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>release</goal>
+                </goals>
+                <inherited>false</inherited>
+                <configuration>
+                  <releaseName>${project.name} ${project.scm.tag}</releaseName>
+                  <tag>${project.scm.tag}</tag>
+                  <prerelease>${prerelease}</prerelease>
+                </configuration>
               </execution>
             </executions>
           </plugin>
