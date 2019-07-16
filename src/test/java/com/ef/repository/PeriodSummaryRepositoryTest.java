@@ -37,7 +37,9 @@ class PeriodSummaryRepositoryTest {
 
     @AfterAll
     static void cleanup() {
-        ctx.stop();
+        if (ctx != null) {
+            ctx.stop();
+        }
     }
 
     @Test

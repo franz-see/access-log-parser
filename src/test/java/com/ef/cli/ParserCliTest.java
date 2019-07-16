@@ -6,10 +6,11 @@ import org.assertj.core.api.AutoCloseableSoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 import picocli.CommandLine;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,7 +22,6 @@ import static org.mockito.Mockito.verify;
 
 class ParserCliTest {
 
-    @Mock
     ParserService parserService;
 
     private ParserCli command;

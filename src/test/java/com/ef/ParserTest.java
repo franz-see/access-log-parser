@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.ef.test.RepositoryUtil.query;
+import static com.ef.test.TestEnvironment.assumeMySqlIsUp;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,6 +24,7 @@ class ParserTest {
 
     @BeforeAll
     static void setup() {
+        assumeMySqlIsUp();
         System.setProperty("env", "withdb");
     }
 
