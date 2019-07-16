@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/franz-see/access-log-parser.svg?branch=master)](https://travis-ci.org/franz-see/access-log-parser)
+
 Table of Contents
 
 1. [Introduction](#introduction)
