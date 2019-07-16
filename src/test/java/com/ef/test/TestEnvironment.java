@@ -11,7 +11,7 @@ public class TestEnvironment {
     public static final String WITH_DB = "withdb";
 
     public static void assumeMySqlIsUp() {
-        assumeThat(isPortAvailable("127.0.0.1", 3306))
+        assumeThat(isPortAvailable("127.0.0.1", 3307))
                 .as("MySQL should be available to run this test")
                 .isTrue();
     }
