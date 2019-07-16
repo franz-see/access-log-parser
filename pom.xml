@@ -39,7 +39,7 @@
     <repository>
       <id>bintray-franz-see-maven-repo</id>
       <name>franz-see-maven-repo</name>
-      <url>https://api.bintray.com/maven/franz-see/maven-repo/access-log-parser/;publish=1</url>
+      <url>https://api.bintray.com/maven/franz-see/maven-repo/java-mysql-test-franz/;publish=1</url>
     </repository>
   </distributionManagement>
 
