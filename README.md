@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/franz-see/access-log-parser.svg?branch=master)](https://travis-ci.org/franz-see/access-log-parser)
+[![Build Status](https://travis-ci.org/franz-see/access-log-parser.svg?branch=master)](https://travis-ci.org/franz-see/access-log-parser) 
+[![codecov](https://codecov.io/gh/franz-see/access-log-parser/branch/master/graph/badge.svg)](https://codecov.io/gh/franz-see/access-log-parser)
 
 Table of Contents
 

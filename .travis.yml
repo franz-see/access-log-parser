@@ -14,6 +14,9 @@ after_install:
   - docker stop ci_db
   - docker rm ci_db
 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
 script:
   - sh mvnw clean install
 
