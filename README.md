@@ -1,3 +1,28 @@
+Table of Contents
+
+1. [Introduction](#introduction)
+2. [How to build](#how-to-build)
+   1. [Full Testing](#full-testing)
+   2. [Unit Testing only](#unit-testing-only)
+3. [How to run](#how-to-run)
+   1. [Sample Usages](#sample-usages)
+      1. [Analyzing an accesslog on an hourly basis](#analyzing-an-accesslog-on-an-hourly-basis)
+      2. [Analyzing an accesslog on a daily basis](#analyzing-an-accesslog-on-a-daily-basis)
+4. [Design](#design)
+5. [Technologies Used](#technologies-used)
+6. [SQL Notes](#sql-notes})
+   1. [Sql Schema](#sql-schema)
+   2. [SQL Queries](#sql-queries)
+      1. [Deleting all access_log_entries](#deleting-all-access_log_entries)
+      2. [Bulk Insert of access_log_entries](#bulk-insert-of-access_log_entries)
+      3. [Querying for ip addresses that goes beyond the threshold on an hourly basis](#querying-for-ip-addresses-that-goes-beyond-the-threshold-on-an-hourly-basis)
+      4. [Querying for ip addresses that goes beyond the threshold on a daily basis](#querying-for-ip-addresses-that-goes-beyond-the-threshold-on-a-daily-basis)
+      5. [Delete All From Period Summary](#delete-all-from-period-summary)
+      6. [Bulk Insert Period Summary](#bulk-insert-period-summary)
+      7. [Get all Period Summary](#get-all-period-summary)
+      8. [Others](#others)
+7. [Appendix](#appendix)
+
 # Introduction
 
 This is a simple application that reads an accesslog of certain format, and then finds the IP addresses that has made a number of requests within a given time period.
