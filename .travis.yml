@@ -1,8 +1,17 @@
 language: java
 
-
 jdk:
   - oraclejdk11
+
+services:
+  - docker
+
+before_install:
+  - docker run -d --name ci_db -p 3307:3306 -e MYSQL_DATABASE=parser_test -e MYSQL_ROOT_PASSWORD=root mysql:5.7.26
+
+after_install:
+  - docker stop ci_db
+  - docker rm ci_db
 
 script:
   - sh mvnw clean install
