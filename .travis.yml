@@ -1,0 +1,12 @@
+language: java
+
+
+jdk:
+  - oraclejdk11
+
+script:
+  - sh mvnw clean install
+
+cache:
+  directories:
+    - "$HOME/.m2"
